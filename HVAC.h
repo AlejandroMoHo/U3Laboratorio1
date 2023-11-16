@@ -65,8 +65,8 @@ uint8_t  Select_Menu;   //Estado del boton menu
 /* Definición de botones. */
 #define ON_OFF      BSP_BUTTON1     //Puerto 1 pin 1
 #define MENU_BTN    BSP_BUTTON2     //Puerto 1 pin 4
-#define UP_BTN      BSP_BUTTON3     //Puerto 2 pin 3
-#define DOWN_BTN    BSP_BUTTON4     //Puerto 2 pin 4
+#define UP_BTN      BSP_BUTTON_UP     //Puerto 1 pin 6
+#define DOWN_BTN    BSP_BUTTON_DOWN     //Puerto 1 pin 7
 
 /* Definición de leds. */
 #define LED_PLACA   BSP_LED1

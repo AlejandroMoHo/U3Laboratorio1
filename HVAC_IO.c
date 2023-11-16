@@ -39,24 +39,24 @@ const ADC_INIT_STRUCT adc_init =
 
 const ADC_INIT_CHANNEL_STRUCT adc_ch_param =
 {
-    AN8,                                                                         // Fuente de lectura, 'ANx'.
-    ADC_CHANNEL_MEASURE_LOOP | ADC_CHANNEL_START_NOW,                            // Banderas de inicialización (temperatura)
+    AN0,                                                                         // Fuente de lectura, 'ANx'.
+    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicialización (temperatura)
     50000,                                                                       // Periodo en uS, base 1000.
     ADC_TRIGGER_1                                                                // Trigger lógico que puede activar este canal.
 };
 
 const ADC_INIT_CHANNEL_STRUCT adc_ch_param2 =
 {
-    AN9,                                                                         // Fuente de lectura, 'ANx'.
-    ADC_CHANNEL_MEASURE_LOOP | ADC_CHANNEL_START_NOW,                            // Banderas de inicialización (pot).
+    AN1,                                                                         // Fuente de lectura, 'ANx'.
+    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicialización (pot).
     50000,                                                                       // Periodo en uS, base 1000.
     ADC_TRIGGER_2                                                                // Trigger lógico que puede activar este canal.
 };
 
 const ADC_INIT_CHANNEL_STRUCT adc_ch_param3 =
 {
-    AN10,                                                                        // Fuente de lectura, 'ANx'.
-    ADC_CHANNEL_MEASURE_LOOP| ADC_CHANNEL_START_NOW,                             // Banderas de inicialización (pot).
+    AN3,                                                                        // Fuente de lectura, 'ANx'.
+    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicialización (pot).
     50000,                                                                       // Periodo en uS, base 1000.
     ADC_TRIGGER_3                                                                // Trigger lógico que puede activar este canal.
 };
@@ -84,12 +84,6 @@ static const uint_32 led_rojo[] =                                               
      GPIO_LIST_END
 };
 
-static const uint_32 led_verde[] =                                                   // Formato de los leds, uno por uno.
-{
-     LED_VERDE,
-     GPIO_LIST_END
-};
-
 const uint_32 led_azul[] =                                                         // Formato de los leds, uno por uno.
 {
      LED_AZUL,
@@ -111,15 +105,38 @@ void INT_SWI(void)
 
     ioctl(input_port, GPIO_IOCTL_READ, &data);
 
-    if((data[0] & GPIO_PIN_STATUS) == 0)        // Lectura de los pines, índice cero es TEMP_PLUS.
+    if((data[0] & GPIO_PIN_STATUS) == 0)
         HVAC_Enc_Apg_Ctrl();
 
-    else if((data[1] & GPIO_PIN_STATUS) == 0){  // Lectura de los pines, índice uno es TEMP_MINUS.
+    else if((data[1] & GPIO_PIN_STATUS) == 0){
         Select_Menu += 0x01;                                    // Cambia la seleccion
             if(Select_Menu > 0x03)                                  // Reinicia la seleccion cuando se pasa de 3
                 Select_Menu = 0x01;
             HVAC_Menu();
     }
+    if(Enc_Apg != APAGADO){                                 //No imprime si el sistema esta apagado
+
+            // Si se pulsa el boton UP
+            if((data[2] & GPIO_PIN_STATUS) == 0){
+                switch(Select_Menu){
+                    case P1_SELECTED:  Persiana1.Estado = Up; break;
+                    case P2_SELECTED:  Persiana2.Estado = Up; break;
+                    case SL_SELECTED:  SecuenciaLED.Estado = Up; break;
+                    case DEFAULT: print("\n\r Selecciona una opcion con el boton MENU \n\r");
+                }
+            }
+
+            // Si se pulsa el boton DOWN
+            if((data[3] & GPIO_PIN_STATUS) == 0){
+                switch(Select_Menu){
+                    case P1_SELECTED:  Persiana1.Estado = Down; break;
+                    case P2_SELECTED:  Persiana2.Estado = Down; break;
+                    case SL_SELECTED:  SecuenciaLED.Estado = Down; break;
+                    case DEFAULT: print("\n\r Selecciona una opcion con el boton MENU \n\r");
+                }
+            }
+            UP_DOWN_Push = TRUE;
+        }
 
     return;
 }
@@ -183,9 +200,9 @@ boolean HVAC_InicialiceADC (void)
     ////////////////////////////////////////////////////////////////////
 
     fd_adc  = fopen_f("adc:",  (const char*) &adc_init);               // Módulo.
-    fd_ch_1 =  fopen_f("adc:1", (const char*) &adc_ch_param);           // Canal uno, arranca al instante.
+    fd_ch_1 =  fopen_f("adc:1", (const char*) &adc_ch_param);           // Canal uno.
     fd_ch_2 =  fopen_f("adc:2", (const char*) &adc_ch_param2);          // Canal dos.
-    fd_ch_3 =  fopen_f("adc:3", (const char*) &adc_ch_param3);          // Canal dos.
+    fd_ch_3 =  fopen_f("adc:3", (const char*) &adc_ch_param3);          // Canal tres.
 
     return (fd_adc != NULL) && (fd_ch_1 != NULL) && (fd_ch_2 != NULL) && (fd_ch_3 != NULL);  // Valida que se crearon los archivos.
 }
@@ -237,24 +254,25 @@ boolean HVAC_InicialiceUART (void)
 *END***********************************************************************************/
 void HVAC_ActualizarEntradas(void)
 {
+    static float LUZ_1, LUZ_2, LUZ_3;
 
     ioctl(fd_ch_1,IOCTL_ADC_RUN_CHANNEL,NULL);
     ioctl(fd_ch_2,IOCTL_ADC_RUN_CHANNEL,NULL);
     ioctl(fd_ch_3,IOCTL_ADC_RUN_CHANNEL,NULL);
 
     ioctl(fd_ch_1,IOCTL_ADC_RESUME_CHANNEL,NULL);
-    fread_f(fd_ch_1,&lum[0],sizeof(lum[0]));
-    lum[0] = (lum[0] * 10) / MAX_ADC_VALUE;
+    fread_f(fd_ch_1,&LUZ_1,sizeof(LUZ_1));
+    lum[0] = (LUZ_1 * 10) / MAX_ADC_VALUE;
     ioctl(fd_ch_1,IOCTL_ADC_PAUSE_CHANNEL,NULL);
 
     ioctl(fd_ch_2,IOCTL_ADC_RESUME_CHANNEL,NULL);
-    fread_f(fd_ch_2,&lum[1],sizeof(lum[1]));
-    lum[1] = (lum[1] * 10) / MAX_ADC_VALUE;
+    fread_f(fd_ch_2,&LUZ_2,sizeof(LUZ_2));
+    lum[1] = (LUZ_2 * 10) / MAX_ADC_VALUE;
     ioctl(fd_ch_2,IOCTL_ADC_PAUSE_CHANNEL,NULL);
 
     ioctl(fd_ch_3,IOCTL_ADC_RESUME_CHANNEL,NULL);
-    fread_f(fd_ch_3,&lum[2],sizeof(lum[2]));
-    lum[2] = (lum[2] * 10) / MAX_ADC_VALUE;
+    fread_f(fd_ch_3,&LUZ_3,sizeof(LUZ_3));
+    lum[2] = (LUZ_3 * 10) / MAX_ADC_VALUE;
     ioctl(fd_ch_3,IOCTL_ADC_PAUSE_CHANNEL,NULL);
 
 }
@@ -332,45 +350,6 @@ void HVAC_PrintState(void)
             ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_azul);
         }
     }
-}
-
-/**********************************************************************************
- * Function: INT_UP_DOWN
- * Preconditions: Interrupcion habilitada, registrada e inicializacion de modulos.
- * Overview: Funcion que es llamada cuando se genera la interrupcion del
- *           boton UP/DOWN.
- *
- **********************************************************************************/
-void INT_UP_DOWN(void)
-{
-    Int_clear_gpio_flags(input_port);                       // Limpia la bandera de la interrupcion.
-
-    ioctl(input_port, GPIO_IOCTL_READ, &data);
-
-    if(Enc_Apg != APAGADO){                                 //No imprime si el sistema esta apagado
-
-        // Si se pulsa el boton UP
-        if((data[2] & GPIO_PIN_STATUS) == 0){
-            switch(Select_Menu){
-                case P1_SELECTED:  Persiana1.Estado = Up; break;
-                case P2_SELECTED:  Persiana2.Estado = Up; break;
-                case SL_SELECTED:  SecuenciaLED.Estado = Up; break;
-                case DEFAULT: print("\n\r Selecciona una opcion con el boton MENU \n\r");
-            }
-        }
-
-        // Si se pulsa el boton DOWN
-        if((data[3] & GPIO_PIN_STATUS) == 0){
-            switch(Select_Menu){
-                case P1_SELECTED:  Persiana1.Estado = Down; break;
-                case P2_SELECTED:  Persiana2.Estado = Down; break;
-                case SL_SELECTED:  SecuenciaLED.Estado = Down; break;
-                case DEFAULT: print("\n\r Selecciona una opcion con el boton MENU \n\r");
-            }
-        }
-        UP_DOWN_Push = TRUE;
-    }
-    return;
 }
 
 /*FUNCTION******************************************************************************

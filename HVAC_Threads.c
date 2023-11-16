@@ -35,6 +35,8 @@ void *Entradas_Thread(void *arg0)
    flag &= HVAC_InicialiceADC();
    flag &= HVAC_InicialiceUART();
 
+   Enc_Apg = APAGADO;
+
    if(flag != TRUE)
    {
        printf("Error al crear archivo. Cierre del programa\r\n");
@@ -45,8 +47,13 @@ void *Entradas_Thread(void *arg0)
 
    while(TRUE)
    {
-       HVAC_ActualizarEntradas();
-       usleep(DELAY);
+       contadorApg = 0;                                    //Reinicia el contador del apagado
+       Select_Menu = 0;                                    //Reinicia la seleccion del menu
+
+       while (Enc_Apg == ENCENDIDO){
+           HVAC_ActualizarEntradas();
+           usleep(DELAY);
+       }
    }
 }
 
