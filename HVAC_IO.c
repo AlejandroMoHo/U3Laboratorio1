@@ -258,21 +258,14 @@ void HVAC_ActualizarEntradas(void)
     ioctl(fd_ch_2,IOCTL_ADC_RUN_CHANNEL,NULL);
     ioctl(fd_ch_3,IOCTL_ADC_RUN_CHANNEL,NULL);
 
-    ioctl(fd_ch_1,IOCTL_ADC_RESUME_CHANNEL,NULL);
     fread_f(fd_ch_1,&LUZ_1,sizeof(LUZ_1));
     lum[0] = (LUZ_1 * 10) / MAX_ADC_VALUE;
-    ioctl(fd_ch_1,IOCTL_ADC_PAUSE_CHANNEL,NULL);
 
-    ioctl(fd_ch_2,IOCTL_ADC_RESUME_CHANNEL,NULL);
     fread_f(fd_ch_2,&LUZ_2,sizeof(LUZ_2));
     lum[1] = (LUZ_2 * 10) / MAX_ADC_VALUE;
-    ioctl(fd_ch_2,IOCTL_ADC_PAUSE_CHANNEL,NULL);
 
-    ioctl(fd_ch_3,IOCTL_ADC_RESUME_CHANNEL,NULL);
     fread_f(fd_ch_3,&LUZ_3,sizeof(LUZ_3));
     lum[2] = (LUZ_3 * 10) / MAX_ADC_VALUE;
-    ioctl(fd_ch_3,IOCTL_ADC_PAUSE_CHANNEL,NULL);
-
 }
 
 /*FUNCTION******************************************************************************
