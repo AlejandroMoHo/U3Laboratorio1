@@ -4,8 +4,8 @@
  // Board:           MSP432P401R
  // Program version: CCS V8.3 TI
  // Company:         Texas Instruments
- // Description:     Funciones de control de HW a través de estados y objetos.
- // Authors:         José Luis Chacón M. y Jesús Alejandro Navarro Acosta.
+ // Description:     Funciones de control de HW a travï¿½s de estados y objetos.
+ // Authors:         Josï¿½ Luis Chacï¿½n M. y Jesï¿½s Alejandro Navarro Acosta.
  // Updated:         11/2018
 
 #include "HVAC.h"
@@ -21,44 +21,43 @@ bool toggle = 0;               // Toggle para el heartbeat.
 _mqx_int delay;                // Delay aplicado al heartbeat.
 bool event = FALSE;
 
-extern void Delay_ms (uint32_t time);           // Funcion de delay.
 float lum[3];
 
-/* Archivos sobre los cuales se escribe toda la información */
+/* Archivos sobre los cuales se escribe toda la informaciï¿½n */
 FILE _PTR_ input_port = NULL, _PTR_ output_port = NULL;                  // Entradas y salidas.
 FILE _PTR_ fd_adc = NULL, _PTR_ fd_ch_1 = NULL, _PTR_ fd_ch_2 = NULL, _PTR_ fd_ch_3 = NULL;
-FILE _PTR_ fd_uart = NULL;                                               // Comunicación serial asíncrona.
+FILE _PTR_ fd_uart = NULL;                                               // Comunicaciï¿½n serial asï¿½ncrona.
 
 // Estructuras iniciales.
 
 const ADC_INIT_STRUCT adc_init =
 {
-    ADC_RESOLUTION_DEFAULT,                                                     // Resolución.
-    ADC_CLKDiv8                                                                 // División de reloj.
+    ADC_RESOLUTION_DEFAULT,                                                     // Resoluciï¿½n.
+    ADC_CLKDiv8                                                                 // Divisiï¿½n de reloj.
 };
 
 const ADC_INIT_CHANNEL_STRUCT adc_ch_param =
 {
     AN0,                                                                         // Fuente de lectura, 'ANx'.
-    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicialización (temperatura)
+    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicializaciï¿½n (temperatura)
     50000,                                                                       // Periodo en uS, base 1000.
-    ADC_TRIGGER_1                                                                // Trigger lógico que puede activar este canal.
+    ADC_TRIGGER_1                                                                // Trigger lï¿½gico que puede activar este canal.
 };
 
 const ADC_INIT_CHANNEL_STRUCT adc_ch_param2 =
 {
     AN1,                                                                         // Fuente de lectura, 'ANx'.
-    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicialización (pot).
+    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicializaciï¿½n (pot).
     50000,                                                                       // Periodo en uS, base 1000.
-    ADC_TRIGGER_2                                                                // Trigger lógico que puede activar este canal.
+    ADC_TRIGGER_2                                                                // Trigger lï¿½gico que puede activar este canal.
 };
 
 const ADC_INIT_CHANNEL_STRUCT adc_ch_param3 =
 {
     AN3,                                                                        // Fuente de lectura, 'ANx'.
-    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicialización (pot).
+    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicializaciï¿½n (pot).
     50000,                                                                       // Periodo en uS, base 1000.
-    ADC_TRIGGER_3                                                                // Trigger lógico que puede activar este canal.
+    ADC_TRIGGER_3                                                                // Trigger lï¿½gico que puede activar este canal.
 };
 
 
@@ -90,12 +89,11 @@ const uint_32 led_azul[] =                                                      
      GPIO_LIST_END
 };
 
-
 /**********************************************************************************
  * Function: INT_SWI
- * Preconditions: Interrupción habilitada, registrada e inicialización de módulos.
- * Overview: Función que es llamada cuando se genera
- *           la interrupción del botón SW1 o SW2.
+ * Preconditions: Interrupciï¿½n habilitada, registrada e inicializaciï¿½n de mï¿½dulos.
+ * Overview: Funciï¿½n que es llamada cuando se genera
+ *           la interrupciï¿½n del botï¿½n SW1 o SW2.
  * Input: None.
  * Output: None.
  **********************************************************************************/
@@ -144,7 +142,7 @@ void INT_SWI(void)
 /*FUNCTION******************************************************************************
 *
 * Function Name    : HVAC_InicialiceIO
-* Returned Value   : boolean; inicialización correcta.
+* Returned Value   : boolean; inicializaciï¿½n correcta.
 * Comments         :
 *    Abre los archivos e inicializa las configuraciones deseadas de entrada y salida GPIO.
 *
@@ -178,7 +176,7 @@ boolean HVAC_InicialiceIO(void)
     input_port =   fopen_f("gpio:read", (char_ptr) &input_set);
 
     if (output_port) { ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, NULL); }   // Inicialmente salidas apagadas.
-    ioctl (input_port, GPIO_IOCTL_SET_IRQ_FUNCTION, INT_SWI);               // Declarando interrupción.
+    ioctl (input_port, GPIO_IOCTL_SET_IRQ_FUNCTION, INT_SWI);               // Declarando interrupciï¿½n.
 
     return (input_port != NULL) && (output_port != NULL);
 }
@@ -186,10 +184,10 @@ boolean HVAC_InicialiceIO(void)
 /*FUNCTION******************************************************************************
 *
 * Function Name    : HVAC_InicialiceADC
-* Returned Value   : boolean; inicialización correcta.
+* Returned Value   : boolean; inicializaciï¿½n correcta.
 * Comments         :
 *    Abre los archivos e inicializa las configuraciones deseadas para
-*    el módulo general ADC y dos de sus canales; uno para la temperatura, otro para
+*    el mï¿½dulo general ADC y dos de sus canales; uno para la temperatura, otro para
 *    el heartbeat.
 *
 *END***********************************************************************************/
@@ -199,7 +197,7 @@ boolean HVAC_InicialiceADC (void)
     // Iniciando ADC y canales.
     ////////////////////////////////////////////////////////////////////
 
-    fd_adc  = fopen_f("adc:",  (const char*) &adc_init);               // Módulo.
+    fd_adc  = fopen_f("adc:",  (const char*) &adc_init);               // Mï¿½dulo.
     fd_ch_1 =  fopen_f("adc:1", (const char*) &adc_ch_param);           // Canal uno.
     fd_ch_2 =  fopen_f("adc:2", (const char*) &adc_ch_param2);          // Canal dos.
     fd_ch_3 =  fopen_f("adc:3", (const char*) &adc_ch_param3);          // Canal tres.
@@ -211,15 +209,15 @@ boolean HVAC_InicialiceADC (void)
 /*FUNCTION******************************************************************************
 *
 * Function Name    : HVAC_InicialiceUART
-* Returned Value   : boolean; inicialización correcta.
+* Returned Value   : boolean; inicializaciï¿½n correcta.
 * Comments         :
 *    Abre los archivos e inicializa las configuraciones deseadas para
-*    configurar el modulo UART (comunicación asíncrona).
+*    configurar el modulo UART (comunicaciï¿½n asï¿½ncrona).
 *
 *END***********************************************************************************/
 boolean HVAC_InicialiceUART (void)
 {
-    // Estructura inicial de comunicación serie.
+    // Estructura inicial de comunicaciï¿½n serie.
     const UART_INIT_STRUCT uart_init =
     {
         /* Selected port */        1,
@@ -234,10 +232,10 @@ boolean HVAC_InicialiceUART (void)
         /* Direccion TX */         LSB_FIRST,
 
         /* Int char's \b */        NO_INTERRUPTION,
-        /* Int char's erróneos */  NO_INTERRUPTION
+        /* Int char's errï¿½neos */  NO_INTERRUPTION
     };
 
-    // Inicialización de archivo.
+    // Inicializaciï¿½n de archivo.
     fd_uart = fopen_f("uart:", (const char*) &uart_init);
 
     return (fd_uart != NULL); // Valida que se crearon los archivos.
@@ -248,7 +246,7 @@ boolean HVAC_InicialiceUART (void)
 * Function Name    : HVAC_ActualizarEntradas
 * Returned Value   : None.
 * Comments         :
-*    Actualiza los variables indicadores de las entradas sobre las cuales surgirán
+*    Actualiza los variables indicadores de las entradas sobre las cuales surgirï¿½n
 *    las salidas.
 *
 *END***********************************************************************************/
@@ -282,8 +280,8 @@ void HVAC_ActualizarEntradas(void)
 * Function Name    : HVAC_Heartbeat
 * Returned Value   : None.
 * Comments         :
-*    Función que prende y apaga una salida para notificar que el sistema está activo.
-*    El periodo en que se hace esto depende de una entrada del ADC en esta función.
+*    Funciï¿½n que prende y apaga una salida para notificar que el sistema estï¿½ activo.
+*    El periodo en que se hace esto depende de una entrada del ADC en esta funciï¿½n.
 *
 *END***********************************************************************************/
 void HVAC_Heartbeat(void)
@@ -306,10 +304,10 @@ void HVAC_Heartbeat(void)
 * Function Name    : HVAC_PrintState
 * Returned Value   : None.
 * Comments         :
-*    Imprime via UART la situación actual del sistema en términos de temperaturas
+*    Imprime via UART la situaciï¿½n actual del sistema en tï¿½rminos de temperaturas
 *    actual y deseada, estado del abanico, del sistema y estado de las entradas.
-*    Imprime cada cierto número de iteraciones y justo despues de recibir un cambio
-*    en las entradas, produciéndose un inicio en las iteraciones.
+*    Imprime cada cierto nï¿½mero de iteraciones y justo despues de recibir un cambio
+*    en las entradas, produciï¿½ndose un inicio en las iteraciones.
 *END***********************************************************************************/
 void HVAC_PrintState(void)
 {
@@ -368,21 +366,21 @@ void HVAC_Enc_Apg_Check(void)
 
         // Si se pulsa el boton para encender...
         if(contadorApg == 0x00)
-            Delay_ms(1000);                             // Espera 1 segundo
+            usleep(1000000);                             // Espera 1 segundo
 
         // Si se pulsa el boton para apagar...
         else if(contadorApg > 0x00)
-            Delay_ms(5000);                             // Espera 5 segundos
+            usleep(5000000);                             // Espera 5 segundos
     }
     else if(UP_DOWN_Push == TRUE){
 
         //Si no hay seleccion o esta seleccionado SL no hay espera
         if(Select_Menu != DEFAULT && Select_Menu != 0x03){
             print("\n\rEspere 5 segundos... ");
-            Delay_ms(4000);
+            usleep(4000000);                             // Espera 5 segundos
         }
 
-        Delay_ms(1000);
+        usleep(1000000);                             // Espera 1 segundo
         HVAC_Menu();
     }
 
