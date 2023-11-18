@@ -39,7 +39,7 @@ const ADC_INIT_STRUCT adc_init =
 const ADC_INIT_CHANNEL_STRUCT adc_ch_param =
 {
     AN0,                                                                         // Fuente de lectura, 'ANx'.
-    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicializaci�n (temperatura)
+    ADC_CHANNEL_START_NOW | ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicializaci�n (temperatura)
     50000,                                                                       // Periodo en uS, base 1000.
     ADC_TRIGGER_1                                                                // Trigger l�gico que puede activar este canal.
 };

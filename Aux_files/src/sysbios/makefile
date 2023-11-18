@@ -6,26 +6,26 @@
 #  template: ti.sysbios/makefile.xdt
 #  target: ti.targets.arm.elf.M4F
 
-vpath % C:/ti/simplelink_msp432p4_sdk_3_40_01_02/kernel/tirtos/packages/ti/sysbios/
-vpath %.c C:/ti/xdctools_3_60_02_34_core/packages/
-vpath %.c C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/
+vpath % /home/jamep/ti/simplelink_msp432p4_sdk_3_40_01_02/kernel/tirtos/packages/ti/sysbios/
+vpath %.c /home/jamep/ti/xdctools_3_60_02_34_core/packages/
+vpath %.c /home/jamep/ti/simplelink_msp432p4_sdk_3_40_01_02/source/
 
-XOPTS = -I"C:/ti/xdctools_3_60_02_34_core/packages/" -Dxdc_target_types__=C:/ti/simplelink_msp432p4_sdk_3_40_01_02/kernel/tirtos/packages/ti/targets/arm/elf/std.h -Dxdc_target_name__=M4F
+XOPTS = -I"/home/jamep/ti/xdctools_3_60_02_34_core/packages/" -Dxdc_target_types__=/home/jamep/ti/simplelink_msp432p4_sdk_3_40_01_02/kernel/tirtos/packages/ti/targets/arm/elf/std.h -Dxdc_target_name__=M4F
 
 BIOS_DEFS =  -Dti_sysbios_BIOS_swiEnabled__D=TRUE -Dti_sysbios_BIOS_taskEnabled__D=TRUE -Dti_sysbios_BIOS_clockEnabled__D=TRUE -Dti_sysbios_BIOS_runtimeCreatesEnabled__D=TRUE -Dti_sysbios_knl_Task_moduleStateCheckFlag__D=FALSE -Dti_sysbios_knl_Task_objectCheckFlag__D=FALSE -Dti_sysbios_hal_Hwi_DISABLE_ALL_HOOKS -Dti_sysbios_knl_Swi_DISABLE_ALL_HOOKS -Dti_sysbios_BIOS_smpEnabled__D=FALSE -Dti_sysbios_Build_useHwiMacros -Dti_sysbios_Build_useIndirectReferences=FALSE -Dti_sysbios_knl_Swi_numPriorities__D=16 -Dti_sysbios_knl_Task_deleteTerminatedTasks__D=FALSE -Dti_sysbios_knl_Task_numPriorities__D=16 -Dti_sysbios_knl_Task_checkStackFlag__D=FALSE -Dti_sysbios_knl_Task_initStackFlag__D=TRUE -Dti_sysbios_knl_Clock_TICK_SOURCE=ti_sysbios_knl_Clock_TickSource_TIMER -Dti_sysbios_knl_Clock_TICK_MODE=ti_sysbios_knl_Clock_TickMode_PERIODIC -Dti_sysbios_hal_Core_delegate_getId=ti_sysbios_hal_CoreNull_getId__E -Dti_sysbios_hal_Core_delegate_interruptCore=ti_sysbios_hal_CoreNull_interruptCore__E -Dti_sysbios_hal_Core_delegate_lock=ti_sysbios_hal_CoreNull_lock__E -Dti_sysbios_hal_Core_delegate_unlock=ti_sysbios_hal_CoreNull_unlock__E -Dti_sysbios_hal_Core_numCores__D=1 -Dti_sysbios_hal_CoreNull_numCores__D=1 -Dti_sysbios_utils_Load_taskEnabled__D=TRUE -Dti_sysbios_utils_Load_swiEnabled__D=FALSE -Dti_sysbios_utils_Load_hwiEnabled__D=FALSE -Dti_sysbios_family_arm_m3_Hwi_dispatcherSwiSupport__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_dispatcherTaskSupport__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_dispatcherAutoNestingSupport__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_dispatcherIrpTrackingSupport__D=TRUE -Dti_sysbios_knl_Semaphore_supportsEvents__D=FALSE -Dti_sysbios_knl_Semaphore_supportsPriority__D=FALSE -Dxdc_runtime_Assert_DISABLE_ALL -Dxdc_runtime_Log_DISABLE_ALL 
 
-CCOPTS = --endian=little -mv7M4 --abi=eabi --float_support=fpv4spd16 -q -ms --opt_for_speed=2  --program_level_compile -o3 -g  -Dti_posix_tirtos_Settings_debug__D=FALSE -I"C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/third_party/CMSIS/Include/"  -DDeviceFamily_MSP432P401x -Dti_sysbios_knl_Clock_stopCheckNext__D=FALSE -Dti_sysbios_family_arm_m3_Hwi_enableException__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_disablePriority__D=32U -Dti_sysbios_family_arm_m3_Hwi_numSparseInterrupts__D=0U -Dti_sysbios_knl_Task_minimizeLatency__D=FALSE
+CCOPTS = --endian=little -mv7M4 --abi=eabi --float_support=fpv4spd16 -q -ms --opt_for_speed=2  --program_level_compile -o3 -g  -Dti_posix_tirtos_Settings_debug__D=FALSE -I"/home/jamep/ti/simplelink_msp432p4_sdk_3_40_01_02/source/third_party/CMSIS/Include/"  -DDeviceFamily_MSP432P401x -Dti_sysbios_knl_Clock_stopCheckNext__D=FALSE -Dti_sysbios_family_arm_m3_Hwi_enableException__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_disablePriority__D=32U -Dti_sysbios_family_arm_m3_Hwi_numSparseInterrupts__D=0U -Dti_sysbios_knl_Task_minimizeLatency__D=FALSE
 
-BIOS_INC = -I"C:/ti/simplelink_msp432p4_sdk_3_40_01_02/kernel/tirtos/packages/"
-ANNEX_INCS =  -IC:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/posix/ccs
-INCS = $(BIOS_INC) $(ANNEX_INCS) -I"C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/" -I"C:/ti/simplelink_msp432p4_sdk_3_40_01_02/kernel/tirtos/packages/" -I"C:/ti/xdctools_3_60_02_34_core/packages/" -I"../" -I"/packages//"  -IC:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include 
+BIOS_INC = -I"/home/jamep/ti/simplelink_msp432p4_sdk_3_40_01_02/kernel/tirtos/packages/"
+ANNEX_INCS =  -I/home/jamep/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/posix/ccs
+INCS = $(BIOS_INC) $(ANNEX_INCS) -I"/home/jamep/ti/simplelink_msp432p4_sdk_3_40_01_02/source/" -I"/home/jamep/ti/simplelink_msp432p4_sdk_3_40_01_02/kernel/tirtos/packages/" -I"/home/jamep/ti/xdctools_3_60_02_34_core/packages/" -I"../" -I"/packages//"  -I/home/jamep/ti/ccs1240/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include 
 
-CC = C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl -c $(CCOPTS)
-ASM = C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl -c $(CCOPTS)
-AR = C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armar rq
+CC = /home/jamep/ti/ccs1240/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl -c $(CCOPTS)
+ASM = /home/jamep/ti/ccs1240/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl -c $(CCOPTS)
+AR = /home/jamep/ti/ccs1240/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armar rq
 
-DEL = C:/ti/xdctools_3_60_02_34_core/packages/../bin/rm -f
-CP = C:/ti/xdctools_3_60_02_34_core/packages/../bin/cp -f
+DEL = rm -f
+CP = cp -f
 
 define RM
 	$(if $(wildcard $1),$(DEL) $1,:)
@@ -67,5 +67,5 @@ sysbios.aem4f: BIOS.obj m3_Hwi_asm.obj m3_Hwi_asm_switch.obj m3_IntrinsicsSuppor
 
 
 clean:
-	@$(DEL) ..\makefile.libs
+	@$(DEL) ../makefile.libs
 	@-$(call RM, *)
