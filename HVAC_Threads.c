@@ -52,6 +52,7 @@ void *Entradas_Thread(void *arg0)
 
        if(Enc_Apg == ENCENDIDO){
            HVAC_ActualizarEntradas();
+           sleep(1);
        }
        usleep(DELAY);
    }

@@ -21,6 +21,7 @@ bool toggle = 0;               // Toggle para el heartbeat.
 _mqx_int delay;                // Delay aplicado al heartbeat.
 bool event = FALSE;
 
+_mqx_int LUZ_1, LUZ_2, LUZ_3;
 float lum[3];
 
 /* Archivos sobre los cuales se escribe toda la informaci�n */
@@ -252,20 +253,19 @@ boolean HVAC_InicialiceUART (void)
 *END***********************************************************************************/
 void HVAC_ActualizarEntradas(void)
 {
-    static float LUZ_1, LUZ_2, LUZ_3;
-
     ioctl(fd_ch_1,IOCTL_ADC_RUN_CHANNEL,NULL);
     ioctl(fd_ch_2,IOCTL_ADC_RUN_CHANNEL,NULL);
     ioctl(fd_ch_3,IOCTL_ADC_RUN_CHANNEL,NULL);
 
     fread_f(fd_ch_1,&LUZ_1,sizeof(LUZ_1));
-    lum[0] = (LUZ_1 * 10) / MAX_ADC_VALUE;
-
     fread_f(fd_ch_2,&LUZ_2,sizeof(LUZ_2));
-    lum[1] = (LUZ_2 * 10) / MAX_ADC_VALUE;
-
     fread_f(fd_ch_3,&LUZ_3,sizeof(LUZ_3));
-    lum[2] = (LUZ_3 * 10) / MAX_ADC_VALUE;
+
+    lum[0] = (LUZ_1 * 10.0) / MAX_ADC_VALUE;
+    lum[1] = (LUZ_2 * 10.0) / MAX_ADC_VALUE;
+    lum[2] = (LUZ_3 * 10.0) / MAX_ADC_VALUE;
+
+    return;
 }
 
 /*FUNCTION******************************************************************************

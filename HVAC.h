@@ -118,6 +118,7 @@ extern void HVAC_Enc_Apg_Check(void);
 // Funciones para controlar el sistema.
 extern void HVAC_Enc_Apg_Ctrl(void);
 extern void HVAC_Menu(void);
+extern void HVAC_Heartbeat(void);
 
 /* Función especial que imprime el mensaje asegurando que no habrá interrupciones y por ende,
  * un funcionamiento no óptimo.                                                             */
