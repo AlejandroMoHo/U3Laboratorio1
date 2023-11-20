@@ -22,6 +22,7 @@ _mqx_int delay;                // Delay aplicado al heartbeat.
 _mqx_int LUZ_1,LUZ_2,LUZ_3;
 float lum[3];
 
+
 /* Archivos sobre los cuales se escribe toda la informaci�n */
 FILE _PTR_ input_port = NULL, _PTR_ output_port = NULL;                  // Entradas y salidas.
 FILE _PTR_ fd_adc = NULL, _PTR_ fd_ch_1 = NULL, _PTR_ fd_ch_2 = NULL, _PTR_ fd_ch_3 = NULL;
@@ -314,11 +315,11 @@ void HVAC_PrintState(void)
     if(SecuenciaLED.Estado == Up){
         //Intercambia entre LED Rojo y Azul
         if(toggle){
-            ioctl(output_port, GPIO_IOCTL_WRITE_LOG1, &led_rojo);
+            ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_rojo);
             ioctl(output_port, GPIO_IOCTL_WRITE_LOG1, &led_azul);
         }
         else{
-            ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_rojo);
+            ioctl(output_port, GPIO_IOCTL_WRITE_LOG1, &led_rojo);
             ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_azul);
         }
 
