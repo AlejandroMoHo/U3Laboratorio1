@@ -19,7 +19,6 @@ bool UP_DOWN_Push = FALSE;                      // Pulsacion del boton UP/DOWN
 
 bool toggle = 0;               // Toggle para el heartbeat.
 _mqx_int delay;                // Delay aplicado al heartbeat.
-bool event = FALSE;
 _mqx_int LUZ_1,LUZ_2,LUZ_3;
 float lum[3];
 
@@ -302,42 +301,33 @@ void HVAC_Heartbeat(void)
 *END***********************************************************************************/
 void HVAC_PrintState(void)
 {
-    static uint_32 delay = DELAY;
-    delay -= DELAY;
+    sprintf(state,"LUZ_1: %0.2f, LUZ_2: %0.2f  LUZ_3: %0.2f \n\r",lum[0], lum[1], lum[2]);
+    print(state);
 
-    if(delay <= 0 || event == TRUE)
-    {
-        event = FALSE;
-        delay = SEC;
+    sprintf(state,"Persiana 1: %s, Persiana 2: %s, Secuencia LEDs: %s\n\r\n\r",
+            (Persiana1.Estado == Up? "UP":"DOWN"),
+            (Persiana2.Estado == Up? "UP":"DOWN"),
+            (SecuenciaLED.Estado == Up? "ON":"OFF"));
+    print(state);
 
-        sprintf(state,"LUZ_1: %0.2f, LUZ_2: %0.2f  LUZ_3: %0.2f \n\r",lum[0], lum[1], lum[2]);
-        print(state);
-
-        sprintf(state,"Persiana 1: %s, Persiana 2: %s, Secuencia LEDs: %s\n\r\n\r",
-                (Persiana1.Estado == Up? "UP":"DOWN"),
-                (Persiana2.Estado == Up? "UP":"DOWN"),
-                (SecuenciaLED.Estado == Up? "ON":"OFF"));
-        print(state);
-
-        //Si se activa la secuencia...
-        if(SecuenciaLED.Estado == Up){
-            //Intercambia entre LED Rojo y Azul
-            if(toggle){
-                ioctl(output_port, GPIO_IOCTL_WRITE_LOG1, &led_rojo);
-                ioctl(output_port, GPIO_IOCTL_WRITE_LOG1, &led_azul);
-            }
-            else{
-                ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_rojo);
-                ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_azul);
-            }
-
-            toggle ^= 1;
+    //Si se activa la secuencia...
+    if(SecuenciaLED.Estado == Up){
+        //Intercambia entre LED Rojo y Azul
+        if(toggle){
+            ioctl(output_port, GPIO_IOCTL_WRITE_LOG1, &led_rojo);
+            ioctl(output_port, GPIO_IOCTL_WRITE_LOG1, &led_azul);
         }
-        //Si no se activa o se desactiva permanece apagado
         else{
             ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_rojo);
             ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_azul);
         }
+
+        toggle ^= 1;
+    }
+        //Si no se activa o se desactiva permanece apagado
+    else{
+        ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_rojo);
+        ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_azul);
     }
 }
 
@@ -357,21 +347,21 @@ void HVAC_Enc_Apg_Check(void)
 
         // Si se pulsa el boton para encender...
         if(contadorApg == 0x00)
-            usleep(1000000);                             // Espera 1 segundo
+            sleep(1);                             // Espera 1 segundo
 
         // Si se pulsa el boton para apagar...
         else if(contadorApg > 0x00)
-            usleep(5000000);                             // Espera 5 segundos
+            sleep(5);                             // Espera 5 segundos
     }
     else if(UP_DOWN_Push == TRUE){
 
         //Si no hay seleccion o esta seleccionado SL no hay espera
         if(Select_Menu != DEFAULT && Select_Menu != 0x03){
             print("\n\rEspere 5 segundos... ");
-            usleep(4000000);                             // Espera 5 segundos
+            sleep(4);                             // Espera 5 segundos
         }
 
-        usleep(1000000);                             // Espera 1 segundo
+        sleep(1);                             // Espera 1 segundo
         HVAC_Menu();
     }
 

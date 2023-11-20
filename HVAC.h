@@ -112,7 +112,7 @@ extern boolean HVAC_InicialiceUART (void);
 /* Funciones principales. */
 extern void HVAC_ActualizarEntradas(void);
 extern void HVAC_PrintState(void);
-
+extern void HVAC_Heartbeat(void);
 extern void HVAC_Enc_Apg_Check(void);
 
 // Funciones para controlar el sistema.

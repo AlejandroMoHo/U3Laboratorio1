@@ -70,7 +70,7 @@ void *Salidas_Thread(void *arg0)
    while(TRUE)
    {
        HVAC_PrintState();
-       usleep(DELAY);
+       sleep(1);
    }
 }
 
