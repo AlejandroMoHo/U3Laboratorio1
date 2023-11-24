@@ -9,6 +9,7 @@
  // Updated:         11/2018
 
 #include "HVAC.h"
+#define SEC 1000000
 
 char state[MAX_MSG_SIZE];      // Cadena a imprimir.
 
@@ -39,7 +40,7 @@ const ADC_INIT_STRUCT adc_init =
 const ADC_INIT_CHANNEL_STRUCT adc_ch_param =
 {
     AN0,                                                                         // Fuente de lectura, 'ANx'.
-    ADC_CHANNEL_START_NOW | ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicializaci�n (temperatura)
+    ADC_CHANNEL_MEASURE_LOOP,                                                    // Banderas de inicializaci�n (temperatura)
     50000,                                                                       // Periodo en uS, base 1000.
     ADC_TRIGGER_1                                                                // Trigger l�gico que puede activar este canal.
 };
@@ -122,6 +123,7 @@ void INT_SWI(void)
                     case SL_SELECTED:  SecuenciaLED.Estado = Up; break;
                     case DEFAULT: print("\n\r Selecciona una opcion con el boton MENU \n\r");
                 }
+                UP_DOWN_Push = TRUE;
             }
 
             // Si se pulsa el boton DOWN
@@ -132,10 +134,9 @@ void INT_SWI(void)
                     case SL_SELECTED:  SecuenciaLED.Estado = Down; break;
                     case DEFAULT: print("\n\r Selecciona una opcion con el boton MENU \n\r");
                 }
+                UP_DOWN_Push = TRUE;
             }
-            UP_DOWN_Push = TRUE;
         }
-
     return;
 }
 
@@ -358,7 +359,7 @@ void HVAC_Enc_Apg_Check(void)
 
         //Si no hay seleccion o esta seleccionado SL no hay espera
         if(Select_Menu != DEFAULT && Select_Menu != 0x03){
-            print("\n\rEspere 5 segundos... ");
+            print("\n\rEspere 5 segundos... \n\r");
             sleep(4);                             // Espera 5 segundos
         }
 
@@ -401,7 +402,6 @@ void HVAC_Enc_Apg_Ctrl(void)
         //Si se pulsa menos de dos veces el boton de apagado...
         else if(contadorApg < 0x02){
             print("Para apagar vuelva a presionar el boton\n\r");    //Imprime instrucciones
-
         }
     }
     Enc_Apg_push = TRUE;   //Controla los segundos de "delay" de cada estado (ON/OFF)

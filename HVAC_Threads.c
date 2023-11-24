@@ -4,11 +4,11 @@
  // Board:           MSP432P401R
  // Program version: CCS V8.3 TI
  // Company:         Texas Instruments
- // Description:     Definición de los funciones de los threads del HVAC.
- // Authors:         José Luis Chacón M. y Jesús Alejandro Navarro Acosta.
+ // Description:     Definiciï¿½n de los funciones de los threads del HVAC.
+ // Authors:         Josï¿½ Luis Chacï¿½n M. y Jesï¿½s Alejandro Navarro Acosta.
  // Updated:         11/2018
 
-#include "HVAC.h"                           // Incluye definición del sistema.
+#include "HVAC.h"                           // Incluye definiciï¿½n del sistema.
 
 void *Entradas_Thread(void *arg0);
 void *Salidas_Thread(void *arg0);
@@ -18,9 +18,9 @@ void *HeartBeat_Thread(void *arg0);
 /*********************************THREAD*************************************
  * Function: Entradas_Thread
  * Preconditions: None.
- * Overview: Se inicializa el sistema y periféricos. Constantemente actualiza
- *           el estado del sistema basándose en las entradas.
- * Input:  Apuntador vacío que puede apuntar cualquier tipo de dato.
+ * Overview: Se inicializa el sistema y perifï¿½ricos. Constantemente actualiza
+ *           el estado del sistema basï¿½ndose en las entradas.
+ * Input:  Apuntador vacï¿½o que puede apuntar cualquier tipo de dato.
  * Output: None.
  *
  *****************************************************************************/
@@ -52,6 +52,7 @@ void *Entradas_Thread(void *arg0)
 
        while (Enc_Apg == ENCENDIDO){
            HVAC_ActualizarEntradas();
+           HVAC_Enc_Apg_Check();
            usleep(DELAY);
        }
    }
@@ -59,9 +60,9 @@ void *Entradas_Thread(void *arg0)
 
 /*********************************THREAD*****************************************
  * Function: Salidas_Thread
- * Preconditions: Haber inicializado los módulos GPIO y UART.
+ * Preconditions: Haber inicializado los mï¿½dulos GPIO y UART.
  * Overview: Constantemente actualiza las salidas e imprime el estado del sistema.
- * Input:  Apuntador vacío que puede apuntar cualquier tipo de dato.
+ * Input:  Apuntador vacï¿½o que puede apuntar cualquier tipo de dato.
  * Output: None.
  *
  ********************************************************************************/
@@ -77,10 +78,10 @@ void *Salidas_Thread(void *arg0)
 
 /*********************************THREAD***************************************************
  * Function: HeartBeat_Thread
- * Preconditions: Haber inicializado el módulo ADC y los GPIO.
+ * Preconditions: Haber inicializado el mï¿½dulo ADC y los GPIO.
  * Overview: Hace un toggle a un estado en base a un delay controlado por un canal del ADC.
  *           El toggle se ve reflejado en una de la salidas del HVAC.
- * Input:  Apuntador vacío que puede apuntar cualquier tipo de dato.
+ * Input:  Apuntador vacï¿½o que puede apuntar cualquier tipo de dato.
  * Output: None.
  *
  *******************************************************************************************/
