@@ -203,9 +203,9 @@ boolean HVAC_InicialiceADC (void)
     fd_ch_2 =  fopen_f("adc:2", (const char*) &adc_ch_param2);          // Canal dos.
     fd_ch_3 =  fopen_f("adc:3", (const char*) &adc_ch_param3);          // Canal tres.
 
-    ioctl(fd_ch_1,IOCTL_ADC_RUN_CHANNEL,NULL);
-    ioctl(fd_ch_2,IOCTL_ADC_RUN_CHANNEL,NULL);
-    ioctl(fd_ch_3,IOCTL_ADC_RUN_CHANNEL,NULL);
+    ioctl(fd_ch_1, IOCTL_ADC_RUN_CHANNEL, NULL);
+    ioctl(fd_ch_2, IOCTL_ADC_RUN_CHANNEL, NULL);
+    ioctl(fd_ch_3, IOCTL_ADC_RUN_CHANNEL, NULL);
 
     return (fd_adc != NULL) && (fd_ch_1 != NULL) && (fd_ch_2 != NULL) && (fd_ch_3 != NULL);  // Valida que se crearon los archivos.
 }
@@ -360,10 +360,12 @@ void HVAC_Enc_Apg_Check(void)
         //Si no hay seleccion o esta seleccionado SL no hay espera
         if(Select_Menu != DEFAULT && Select_Menu != 0x03){
             print("\n\rEspere 5 segundos... \n\r");
-            sleep(4);                             // Espera 5 segundos
+            Task_setPri(((pthread_Obj*)salidas_thread)->task, -1);
+            Task_setPri(((pthread_Obj*)heartbeat_thread)->task, -1);
+            sleep(5);                             // Espera 5 segundos
+            Task_setPri(((pthread_Obj*)salidas_thread)->task, 1);
+            Task_setPri(((pthread_Obj*)heartbeat_thread)->task, 1);
         }
-
-        sleep(1);                             // Espera 1 segundo
         HVAC_Menu();
     }
 

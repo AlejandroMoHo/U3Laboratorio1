@@ -4,8 +4,8 @@
  // Board:           MSP432P401R
  // Program version: CCS V8.3 TI
  // Company:         Texas Instruments
- // Description:     Incluye librerías, define ciertas macros, así como llevar un control de versiones.
- // Authors:         José Luis Chacón M. y Jesús Alejandro Navarro Acosta.
+ // Description:     Incluye librerï¿½as, define ciertas macros, asï¿½ como llevar un control de versiones.
+ // Authors:         Josï¿½ Luis Chacï¿½n M. y Jesï¿½s Alejandro Navarro Acosta.
  // Updated:         11/2018
 
 #ifndef _hvac_h_
@@ -62,13 +62,13 @@ uint8_t  Select_Menu;   //Estado del boton menu
 #define ENTRADA 1
 #define SALIDA 0
 
-/* Definición de botones. */
+/* Definiciï¿½n de botones. */
 #define ON_OFF      BSP_BUTTON1     //Puerto 1 pin 1
 #define MENU_BTN    BSP_BUTTON2     //Puerto 1 pin 4
 #define UP_BTN      BSP_BUTTON_UP     //Puerto 1 pin 6
 #define DOWN_BTN    BSP_BUTTON_DOWN     //Puerto 1 pin 7
 
-/* Definición de leds. */
+/* Definiciï¿½n de leds. */
 #define LED_PLACA   BSP_LED1
 #define LED_ROJO    BSP_LED2
 #define LED_VERDE   BSP_LED3
@@ -95,7 +95,7 @@ uint32_t contadorApg;
 #define THREADSTACKSIZE2 1500
 #define THREADSTACKSIZE3 1500
 
-// Definición de delay para threads de entradas y salidas.
+// Definiciï¿½n de delay para threads de entradas y salidas.
 #define DELAY 4000
 
 /* Funciones. */
@@ -119,8 +119,11 @@ extern void HVAC_Enc_Apg_Check(void);
 extern void HVAC_Enc_Apg_Ctrl(void);
 extern void HVAC_Menu(void);
 
-/* Función especial que imprime el mensaje asegurando que no habrá interrupciones y por ende,
- * un funcionamiento no óptimo.                                                             */
+/* Funciï¿½n especial que imprime el mensaje asegurando que no habrï¿½ interrupciones y por ende,
+ * un funcionamiento no ï¿½ptimo.                                                             */
 extern void print(char* message);
+
+pthread_t           entradas_thread, salidas_thread, heartbeat_thread;
+
 
 #endif
