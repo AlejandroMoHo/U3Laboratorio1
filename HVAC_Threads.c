@@ -70,7 +70,8 @@ void *Salidas_Thread(void *arg0)
 {
    while(TRUE)
    {
-       HVAC_PrintState();
+       if(Enc_Apg == ENCENDIDO)
+         HVAC_PrintState();
        sleep(1);
    }
 }

@@ -352,8 +352,12 @@ void HVAC_Enc_Apg_Check(void)
             sleep(1);                             // Espera 1 segundo
 
         // Si se pulsa el boton para apagar...
-        else if(contadorApg > 0x00)
+        else if(contadorApg > 0x00){
+            Task_setPri(((pthread_Obj*)salidas_thread)->task, -1);
             sleep(5);                             // Espera 5 segundos
+            contadorApg = 0x00;
+            Task_setPri(((pthread_Obj*)salidas_thread)->task, 1);
+        }
     }
     else if(UP_DOWN_Push == TRUE){
 
@@ -397,6 +401,7 @@ void HVAC_Enc_Apg_Ctrl(void)
         //Si se pulsa dos veces el boton de apagado...
         if(contadorApg == 0x02){
             Enc_Apg = APAGADO;                              //Se apaga el sistema
+            Task_setPri(((pthread_Obj*)salidas_thread)->task, 1);
             print("SISTEMA APAGADO\n\r");    //Se informa al usuario
             ioctl(output_port, GPIO_IOCTL_WRITE_LOG0, &led_rojo);   //Apaga el LED rojo
         }
